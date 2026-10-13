@@ -1,1 +1,3 @@
-{"name": "보령머드축제 안내 (데모)", "short_name": "보령머드 데모", "description": "2026년 종료 행사 자료로 만든 비공식 시연용 안내", "start_url": "./", "scope": "./", "display": "standalone", "background_color": "#EFF7F7", "theme_color": "#075B70", "lang": "ko", "icons": [{"src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}
+{ "name": "보령머드축제 안내", "short_name": "머드축제", "start_url": "./", "scope": "./", "display": "standalone",
+  "background_color": "#ffffff", "theme_color": "#0A5C6E", "lang": "ko",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }] }
