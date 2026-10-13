@@ -1,0 +1,1453 @@
+{
+ "_doc": "보령 공식 자료 확인일 2026-10-13. .build/make_data.py로 재생성.",
+ "demoNotice": "영업 시연용 데모 · 공식 서비스 아님 · 2026년 종료 행사 참고용",
+ "endedNotice": "제29회 보령머드축제는 2026.8.9 종료되었습니다. 지난 행사 정보로 만든 시연용 화면입니다.",
+ "festival": {
+  "id": "boryeong-mud-29-2026",
+  "name": "제29회 보령머드축제",
+  "shortName": "보령머드축제",
+  "edition": 29,
+  "region": "보령",
+  "theme": "가자! 보령으로 놀자! 머드로",
+  "subTheme": "2026년 종료 행사 · 영업 시연용",
+  "startDate": "2026-07-24",
+  "endDate": "2026-08-09",
+  "dateLabel": "2026. 7. 24.(금) ~ 8. 9.(일) · 17일간",
+  "venues": [
+   "머드엑스포광장",
+   "머드광장",
+   "노을광장"
+  ],
+  "venueLabel": "대천해수욕장 일원",
+  "mainVenue": "머드엑스포광장",
+  "host": "보령시",
+  "organizer": "보령축제관광재단",
+  "hours": "체험존 월~목 13:00~18:00, 금~일 10:00~18:00 / 날짜별 예외는 프로그램 확인",
+  "fee": "일반존 성인 주중 12,000원·주말 16,000원 / 패밀리존 11,000원·13,000원",
+  "intro": "대천해수욕장 일원에서 머드 체험과 야간 공연을 함께 즐기는 여름 축제입니다. 체험존별 입장 조건과 안전점검 휴무를 확인하세요.",
+  "officialSite": "https://www.mudfestival.or.kr/festival/view"
+ },
+ "theme": {
+  "main": "#075B70",
+  "bg": "#EFF7F7",
+  "sub": "#E7AE42",
+  "accent": "#AD4B24",
+  "font": "#163B4A",
+  "card": "#FFFFFF"
+ },
+ "days": [
+  {
+   "date": "2026-07-24",
+   "label": "1일차",
+   "dow": "금"
+  },
+  {
+   "date": "2026-07-25",
+   "label": "2일차",
+   "dow": "토"
+  },
+  {
+   "date": "2026-07-26",
+   "label": "3일차",
+   "dow": "일"
+  },
+  {
+   "date": "2026-07-27",
+   "label": "4일차",
+   "dow": "월"
+  },
+  {
+   "date": "2026-07-28",
+   "label": "5일차",
+   "dow": "화"
+  },
+  {
+   "date": "2026-07-29",
+   "label": "6일차",
+   "dow": "수"
+  },
+  {
+   "date": "2026-07-30",
+   "label": "7일차",
+   "dow": "목"
+  },
+  {
+   "date": "2026-07-31",
+   "label": "8일차",
+   "dow": "금"
+  },
+  {
+   "date": "2026-08-01",
+   "label": "9일차",
+   "dow": "토"
+  },
+  {
+   "date": "2026-08-02",
+   "label": "10일차",
+   "dow": "일"
+  },
+  {
+   "date": "2026-08-03",
+   "label": "11일차",
+   "dow": "월"
+  },
+  {
+   "date": "2026-08-04",
+   "label": "12일차",
+   "dow": "화"
+  },
+  {
+   "date": "2026-08-05",
+   "label": "안전점검",
+   "dow": "수"
+  },
+  {
+   "date": "2026-08-06",
+   "label": "14일차",
+   "dow": "목"
+  },
+  {
+   "date": "2026-08-07",
+   "label": "15일차",
+   "dow": "금"
+  },
+  {
+   "date": "2026-08-08",
+   "label": "16일차",
+   "dow": "토"
+  },
+  {
+   "date": "2026-08-09",
+   "label": "17일차",
+   "dow": "일"
+  }
+ ],
+ "categories": [
+  {
+   "key": "experience",
+   "name": "체험",
+   "color": "#075B70"
+  },
+  {
+   "key": "show",
+   "name": "공연",
+   "color": "#6D4897"
+  },
+  {
+   "key": "ceremony",
+   "name": "공식·시민행사",
+   "color": "#AD4B24"
+  },
+  {
+   "key": "notice",
+   "name": "운영 확인",
+   "color": "#A13935"
+  }
+ ],
+ "programs": [
+  {
+   "id": "p001",
+   "title": "머드체험 일반존·머드몹신",
+   "dates": [
+    "2026-07-27",
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30",
+    "2026-08-03",
+    "2026-08-04"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "주중 운영",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p002",
+   "title": "패밀리존·워터파크존",
+   "dates": [
+    "2026-07-27",
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30",
+    "2026-08-03",
+    "2026-08-04"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "주중 운영 / 워터파크는 유료 핸드링 소지자 이용",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p003",
+   "title": "머드캐스크존",
+   "dates": [
+    "2026-07-27",
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30",
+    "2026-08-03",
+    "2026-08-04"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "주중 운영 / 무료 입장",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p004",
+   "title": "머드체험 일반존·머드몹신",
+   "dates": [
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-07",
+    "2026-08-08",
+    "2026-08-09"
+   ],
+   "time": "10:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "휴식 13:30~14:30",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p005",
+   "title": "패밀리존·워터파크존",
+   "dates": [
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-07",
+    "2026-08-08",
+    "2026-08-09"
+   ],
+   "time": "10:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "휴식 13:30~14:30 / 워터파크는 유료 핸드링 소지자 이용",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p006",
+   "title": "머드캐스크존",
+   "dates": [
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-07",
+    "2026-08-08",
+    "2026-08-09"
+   ],
+   "time": "10:00~18:00",
+   "venue": "머드광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "휴식 13:30~14:30 / 무료 입장",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p007",
+   "title": "머드체험 일반존·머드몹신",
+   "dates": [
+    "2026-08-06"
+   ],
+   "time": "13:00~21:30",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "일반존 야간연장, 휴식 17:00~18:00",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p008",
+   "title": "패밀리존·워터파크존",
+   "dates": [
+    "2026-08-06"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "야간 미운영, 휴식 없음 / 워터파크는 유료 핸드링 소지자 이용",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p009",
+   "title": "머드캐스크존",
+   "dates": [
+    "2026-08-06"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "야간 미운영, 휴식 없음 / 무료 입장",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p010",
+   "title": "머드체험 일반존·머드몹신",
+   "dates": [
+    "2026-07-24"
+   ],
+   "time": "13:00~21:30",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "일반존 야간연장, 휴식 17:00~18:00",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p011",
+   "title": "패밀리존·워터파크존",
+   "dates": [
+    "2026-07-24"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드엑스포광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "야간 미운영, 휴식 없음 / 워터파크는 유료 핸드링 소지자 이용",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p012",
+   "title": "머드캐스크존",
+   "dates": [
+    "2026-07-24"
+   ],
+   "time": "13:00~18:00",
+   "venue": "머드광장",
+   "cat": "experience",
+   "performers": [],
+   "desc": "",
+   "note": "야간 미운영, 휴식 없음 / 무료 입장",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p013",
+   "title": "머드온더비치",
+   "dates": [
+    "2026-07-24",
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-27",
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-03",
+    "2026-08-04",
+    "2026-08-06",
+    "2026-08-07",
+    "2026-08-08"
+   ],
+   "time": "20:00~21:30",
+   "venue": "대천해수욕장 머드광장 해변",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p014",
+   "title": "머드온더비치",
+   "dates": [
+    "2026-08-09"
+   ],
+   "time": "19:50~22:00",
+   "venue": "대천해수욕장 머드광장 해변",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p015",
+   "title": "머드버스킹",
+   "dates": [
+    "2026-07-24",
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-07",
+    "2026-08-08",
+    "2026-08-09"
+   ],
+   "time": "18:00~20:00",
+   "venue": "대천해수욕장 머드광장 해변",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "금~일 운영",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p016",
+   "title": "노을광장 열린무대",
+   "dates": [
+    "2026-07-24",
+    "2026-07-25",
+    "2026-07-26",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-02",
+    "2026-08-07",
+    "2026-08-08",
+    "2026-08-09"
+   ],
+   "time": "19:00~21:00",
+   "venue": "노을광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "금~일 운영",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p017",
+   "title": "머드나잇 퍼레이드",
+   "dates": [
+    "2026-07-24",
+    "2026-07-25",
+    "2026-07-31",
+    "2026-08-01",
+    "2026-08-07",
+    "2026-08-08"
+   ],
+   "time": "시각 확인 필요",
+   "venue": "노을광장 ⇔ 만남의광장",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "공식 표에는 1회 7:30~8:00, 2회 8:30~9:00으로 표기. 오전·오후 구분을 확인하지 못해 19시대로 바꾸지 않았습니다.",
+   "always": true,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p018",
+   "title": "시민 한마당",
+   "dates": [
+    "2026-07-24"
+   ],
+   "time": "17:00",
+   "venue": "보령종합체육관",
+   "cat": "ceremony",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p019",
+   "title": "블랙이글스 에어쇼",
+   "dates": [
+    "2026-07-25"
+   ],
+   "time": "16:20",
+   "venue": "대천해수욕장 일원",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p020",
+   "title": "K-POP SUPER LIVE",
+   "dates": [
+    "2026-07-25"
+   ],
+   "time": "19:20",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "공식 행사 상세 입장 안내 확인",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p021",
+   "title": "드론라이트쇼",
+   "dates": [
+    "2026-07-25"
+   ],
+   "time": "22:00",
+   "venue": "대천해수욕장 머드광장 중심",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p022",
+   "title": "8090 콘서트",
+   "dates": [
+    "2026-07-26"
+   ],
+   "time": "20:00(예정)",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장 / 원문 예정 표기 유지",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p023",
+   "title": "K-힙합페스티벌 1부",
+   "dates": [
+    "2026-07-31"
+   ],
+   "time": "19:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p024",
+   "title": "K-힙합페스티벌 2부",
+   "dates": [
+    "2026-08-01"
+   ],
+   "time": "19:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p025",
+   "title": "제8회 머드가요제",
+   "dates": [
+    "2026-08-02"
+   ],
+   "time": "19:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p026",
+   "title": "체험존 안전점검 휴무",
+   "dates": [
+    "2026-08-05"
+   ],
+   "time": "",
+   "venue": "머드엑스포광장·머드광장",
+   "cat": "notice",
+   "performers": [],
+   "desc": "",
+   "note": "체험존·연계행사 미운영. 일정표 하단에는 이날 머드온더비치가 기재돼 있어 별도 확인이 필요합니다.",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p027",
+   "title": "머드락페스타",
+   "dates": [
+    "2026-08-07"
+   ],
+   "time": "18:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p028",
+   "title": "빅머드쇼 1부",
+   "dates": [
+    "2026-08-08"
+   ],
+   "time": "17:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p029",
+   "title": "빅머드쇼 2부",
+   "dates": [
+    "2026-08-08"
+   ],
+   "time": "19:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 무료 입장",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p030",
+   "title": "폐막식",
+   "dates": [
+    "2026-08-09"
+   ],
+   "time": "19:00",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "ceremony",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p031",
+   "title": "TV조선 슈퍼콘서트",
+   "dates": [
+    "2026-08-09"
+   ],
+   "time": "19:20",
+   "venue": "머드엑스포광장 특설무대",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "선착순 번호표 배부 입장, 상세 안내 확인",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p032",
+   "title": "드론라이트쇼",
+   "dates": [
+    "2026-08-09"
+   ],
+   "time": "22:00",
+   "venue": "대천해수욕장 머드광장 중심",
+   "cat": "show",
+   "performers": [],
+   "desc": "",
+   "note": "",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  },
+  {
+   "id": "p033",
+   "title": "머드온더비치 (운영 확인 필요)",
+   "dates": [
+    "2026-08-05"
+   ],
+   "time": "20:00~21:30 (확인 필요)",
+   "venue": "대천해수욕장 머드광장 해변",
+   "cat": "notice",
+   "performers": [],
+   "desc": "",
+   "note": "공식 일정표 상단의 연계행사 미운영 안내와 하단의 공연 기재가 충돌합니다. 운영 여부를 확정하지 않았습니다.",
+   "always": false,
+   "source": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+   "checkedAt": "2026-10-13"
+  }
+ ],
+ "programSourceNote": "공식 행사일정표·체험존 안내 2026-10-13 확인. 일부 시각·휴무 안내 충돌은 확인 필요로 남겼습니다.",
+ "map": {
+  "center": [
+   36.312,
+   126.514
+  ],
+  "zoom": 15,
+  "markers": [
+   {
+    "name": "대천해수욕장",
+    "lat": 36.30891598777778,
+    "lng": 126.51346473777778,
+    "cat": "venue",
+    "verified": true,
+    "major": true,
+    "desc": "OSM 등록 해변 중심점. 축제 내부 부스·출입구 위치는 확인되지 않았습니다.",
+    "source": "https://www.openstreetmap.org/way/591698660"
+   },
+   {
+    "name": "대천서 중학교",
+    "lat": 36.31848257272727,
+    "lng": 126.51403652424241,
+    "cat": "info",
+    "verified": true,
+    "major": false,
+    "desc": "공식 행사장 안내도에 있는 주변 참고 지점. 학교 주차 가능 여부는 미확인입니다.",
+    "source": "https://www.openstreetmap.org/way/820174225"
+   },
+   {
+    "name": "청파초등학교",
+    "lat": 36.318231475,
+    "lng": 126.5114280125,
+    "cat": "info",
+    "verified": true,
+    "major": false,
+    "desc": "공식 주차 안내의 3지구 제5주차장 인근 참고 지점. 학교를 주차장으로 안내하는 것이 아닙니다.",
+    "source": "https://www.openstreetmap.org/way/821838715"
+   },
+   {
+    "name": "S마트",
+    "lat": 36.31637427142857,
+    "lng": 126.51300292857142,
+    "cat": "info",
+    "verified": true,
+    "major": false,
+    "desc": "공식 주차 안내의 3지구 제3주차장 인근 참고 지점. 상점·주차장 경계는 별개입니다.",
+    "source": "https://www.openstreetmap.org/way/1055876546"
+   }
+  ],
+  "areas": [
+   {
+    "name": "대천해수욕장",
+    "source": "https://www.openstreetmap.org/way/591698660",
+    "coords": [
+     [
+      36.3225313,
+      126.504383
+     ],
+     [
+      36.3223378,
+      126.5048945
+     ],
+     [
+      36.3220183,
+      126.5052588
+     ],
+     [
+      36.3215295,
+      126.5057511
+     ],
+     [
+      36.3202608,
+      126.5066606
+     ],
+     [
+      36.3198771,
+      126.5069103
+     ],
+     [
+      36.3194001,
+      126.5071387
+     ],
+     [
+      36.3187646,
+      126.5074662
+     ],
+     [
+      36.3180384,
+      126.5078817
+     ],
+     [
+      36.317298,
+      126.5083096
+     ],
+     [
+      36.3166399,
+      126.5086933
+     ],
+     [
+      36.3163573,
+      126.5088678
+     ],
+     [
+      36.3161304,
+      126.5090273
+     ],
+     [
+      36.3158226,
+      126.5092887
+     ],
+     [
+      36.3150813,
+      126.5099919
+     ],
+     [
+      36.3140931,
+      126.5109892
+     ],
+     [
+      36.3135732,
+      126.5114416
+     ],
+     [
+      36.3131407,
+      126.5118399
+     ],
+     [
+      36.3127435,
+      126.5121295
+     ],
+     [
+      36.3118915,
+      126.5127042
+     ],
+     [
+      36.3103587,
+      126.5136582
+     ],
+     [
+      36.3093967,
+      126.5142061
+     ],
+     [
+      36.3086767,
+      126.5146437
+     ],
+     [
+      36.308331,
+      126.5147723
+     ],
+     [
+      36.3080759,
+      126.5149016
+     ],
+     [
+      36.3075762,
+      126.515159
+     ],
+     [
+      36.3066845,
+      126.5155588
+     ],
+     [
+      36.3062015,
+      126.5157805
+     ],
+     [
+      36.3054108,
+      126.5161359
+     ],
+     [
+      36.3053878,
+      126.5160471
+     ],
+     [
+      36.3051969,
+      126.5161448
+     ],
+     [
+      36.30522,
+      126.5162211
+     ],
+     [
+      36.3050269,
+      126.5163211
+     ],
+     [
+      36.3049977,
+      126.5162309
+     ],
+     [
+      36.3047549,
+      126.5163451
+     ],
+     [
+      36.304783,
+      126.516431
+     ],
+     [
+      36.3046775,
+      126.5164774
+     ],
+     [
+      36.3041241,
+      126.5167224
+     ],
+     [
+      36.3038648,
+      126.5168235
+     ],
+     [
+      36.3032987,
+      126.517147
+     ],
+     [
+      36.3027413,
+      126.5174582
+     ],
+     [
+      36.3022118,
+      126.5177378
+     ],
+     [
+      36.3017021,
+      126.5180081
+     ],
+     [
+      36.301379,
+      126.5181336
+     ],
+     [
+      36.301216,
+      126.5181738
+     ],
+     [
+      36.3010544,
+      126.5182035
+     ],
+     [
+      36.3008904,
+      126.518233
+     ],
+     [
+      36.3007007,
+      126.5182293
+     ],
+     [
+      36.3005714,
+      126.5182074
+     ],
+     [
+      36.3004635,
+      126.5181797
+     ],
+     [
+      36.3003197,
+      126.5181275
+     ],
+     [
+      36.300234,
+      126.5180775
+     ],
+     [
+      36.3001583,
+      126.5180275
+     ],
+     [
+      36.3000413,
+      126.5179359
+     ],
+     [
+      36.2999677,
+      126.517851
+     ],
+     [
+      36.2999617,
+      126.5177616
+     ],
+     [
+      36.2999788,
+      126.5176732
+     ],
+     [
+      36.3000387,
+      126.5176272
+     ],
+     [
+      36.3001169,
+      126.5175735
+     ],
+     [
+      36.300188,
+      126.517659
+     ],
+     [
+      36.3005217,
+      126.5178555
+     ],
+     [
+      36.3006883,
+      126.5178939
+     ],
+     [
+      36.3009232,
+      126.5178935
+     ],
+     [
+      36.301149,
+      126.5178778
+     ],
+     [
+      36.3013792,
+      126.5178062
+     ],
+     [
+      36.3016686,
+      126.5176689
+     ],
+     [
+      36.3020253,
+      126.5174312
+     ],
+     [
+      36.302501,
+      126.5171809
+     ],
+     [
+      36.3054859,
+      126.5158045
+     ],
+     [
+      36.3071409,
+      126.515048
+     ],
+     [
+      36.3074203,
+      126.5149161
+     ],
+     [
+      36.3084962,
+      126.5143006
+     ],
+     [
+      36.3089798,
+      126.5140351
+     ],
+     [
+      36.3095763,
+      126.5136298
+     ],
+     [
+      36.3103575,
+      126.5130797
+     ],
+     [
+      36.3109332,
+      126.512671
+     ],
+     [
+      36.3117457,
+      126.512114
+     ],
+     [
+      36.3130907,
+      126.5111358
+     ],
+     [
+      36.3142153,
+      126.510166
+     ],
+     [
+      36.3150885,
+      126.5093003
+     ],
+     [
+      36.3155315,
+      126.508854
+     ],
+     [
+      36.3157931,
+      126.508602
+     ],
+     [
+      36.3160122,
+      126.5084287
+     ],
+     [
+      36.3161902,
+      126.5083083
+     ],
+     [
+      36.3169556,
+      126.5078885
+     ],
+     [
+      36.3189714,
+      126.5069503
+     ],
+     [
+      36.3199588,
+      126.5063721
+     ],
+     [
+      36.3210957,
+      126.5055903
+     ],
+     [
+      36.3225031,
+      126.5044067
+     ],
+     [
+      36.3225313,
+      126.504383
+     ]
+    ]
+   }
+  ],
+  "categories": [
+   {
+    "key": "all",
+    "name": "전체"
+   },
+   {
+    "key": "venue",
+    "name": "해변",
+    "color": "#075B70"
+   },
+   {
+    "key": "info",
+    "name": "주변 참고 지점",
+    "color": "#AD4B24"
+   }
+  ],
+  "note": "실선: OSM 확인 해변·참고 지점 / 참고 지점은 주차장이 아님 / 부스·정류장 좌표 미확인"
+ },
+ "shuttle": {
+  "period": "2026.7.24~8.9 (8.5 휴무) · 운행 종료",
+  "hours": "공식 본문에서 확인하지 못함",
+  "fare": "미공개 · 카카오T 상품별 확인",
+  "routes": [],
+  "extra": [
+   {
+    "title": "카카오T 셔틀 공식 안내",
+    "body": "공식 누리집에서 카카오T 상품 링크를 안내했습니다. 정류장·요금·시간은 상품별로 확인합니다. 이 MVP는 실제 운행·예약을 제공하지 않습니다."
+   }
+  ],
+  "note": "셔틀 노선·배차·정류장·요금 수치는 이 데모에서 확정하지 않았습니다.",
+  "source": "https://www.mudfestival.or.kr/festival/event/read?seqNo=218&level=2&menuNo=31",
+  "sourceUrl": "https://www.mudfestival.or.kr/festival/event/read?seqNo=218&level=2&menuNo=31"
+ },
+ "parking": {
+  "intro": "대천해수욕장 공식 주차 안내 11개 항목입니다. 1지구 제2·3주차장은 한 항목으로 소개되며, 제1주차장은 버스전용입니다. 실시간 잔여면수 정보는 없습니다.",
+  "zones": [
+   {
+    "name": "대천해수욕장 주차 안내",
+    "total": "11개 안내 항목",
+    "access": "공식 누리집 주소·인근건물 기준",
+    "lots": [
+     [
+      "3지구(제1주차장) · 충남 보령시 신흑동 2285 ~ 2286 (구 박람회장 인근)",
+      "미공개",
+      "대천신흥교회 옆"
+     ],
+     [
+      "3지구 (제4주차장) · 충남 보령시 신흑동 2293 (구 박람회장 인근)",
+      "미공개",
+      "대천5동 주민센터 인근"
+     ],
+     [
+      "3지구 (제3주차장) · 충남 보령시 신흑동 2279",
+      "미공개",
+      "신흑119 안전센터 인근(에스마트 옆)"
+     ],
+     [
+      "1지구 (제2,3주차장) · 충남 보령시 신흑동 1436 (노을광장)",
+      "미공개",
+      "한화리조트 대천파로스 앞"
+     ],
+     [
+      "1지구(제1주차장) 버스전용 · 충남 보령시 신흑동 2016 (노을광장)",
+      "미공개",
+      "호텔마스타대천 앞"
+     ],
+     [
+      "2지구 (제2주차장) · 충남 보령시 신흑동 2204-17 (해저터널 입구 인근)",
+      "미공개",
+      "보령해저터널홍보관 인근"
+     ],
+     [
+      "2지구 (제1주차장) · 충남 보령시 신흑동 2212-1 (머드광장 펜션단지)",
+      "미공개",
+      "대전학생해양수련원 뒷편 인근"
+     ],
+     [
+      "3지구 (제2주차장) · 충남 보령시 신흑동 2262 (머드광장 펜션단지)",
+      "미공개",
+      "대천해수욕장교회 인근"
+     ],
+     [
+      "3지구 (제5주차장) · 충남 보령시 신흑동 2252",
+      "미공개",
+      "청파초등학교 인근"
+     ],
+     [
+      "대천연안여객선터미널주차장(정문) · 충남 보령시 신흑동 2242 (어항)",
+      "미공개",
+      "대천항 연안여객선터미널 인근"
+     ],
+     [
+      "대천항수산시장주차장 · 충남 보령시 신흑동 2240-10 (어항)",
+      "미공개",
+      "대천항 수산시장 앞"
+     ]
+    ]
+   }
+  ],
+  "fee": "주차 면수·요금·2026년 특별 운영시간은 공식 본문에 미공개. 과거 행사용 참고 안내입니다.",
+  "sources": [
+   "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=14&level=2&menuNo=50"
+  ],
+  "sourceUrl": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=14&level=2&menuNo=50"
+ },
+ "notices": [
+  {
+   "type": "NOTICE",
+   "title": "8월 5일 체험존 안전점검 휴무",
+   "summary": "체험존 미운영. 머드온더비치는 일정표 내부 표기가 충돌해 확인 필요.",
+   "date": "2026-08-05",
+   "url": "https://www.mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32"
+  },
+  {
+   "type": "NOTICE",
+   "title": "일반존 야간연장 운영 안내",
+   "summary": "7월 24일·8월 6일 일반존 13:00~21:30. 다른 체험존은 야간 미운영.",
+   "date": "2026-07-24",
+   "url": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34"
+  },
+  {
+   "type": "EVENT",
+   "title": "2026 보령국가유산야행",
+   "summary": "10월 16~18일 망루·원도심 일원. 재단 공식 프로그램 안내로 이동.",
+   "date": "2026-10-16",
+   "url": "https://www.mudfestival.or.kr/festival/event/list?level=2&menuNo=95"
+  }
+ ],
+ "faq": [
+  {
+   "q": "지금 머드축제를 이용할 수 있나요?",
+   "a": "제29회 축제는 2026년 8월 9일 종료했습니다. 이 화면은 지난 행사 자료로 만든 영업 시연용 데모이며, 2027년 일정은 확인하지 않았습니다."
+  },
+  {
+   "q": "체험존 입장료는 얼마였나요?",
+   "a": "2026 일반존 성인(19~64세)은 월~목 12,000원, 금~일 16,000원입니다. 패밀리존 보호자·어린이는 각각 주중 11,000원, 주말 13,000원입니다. 할인·연령 조건은 공식 안내를 확인하세요."
+  },
+  {
+   "q": "체험존은 언제 쉬었나요?",
+   "a": "8월 5일 안전점검으로 체험존이 쉬었습니다. 일반존은 7월 24일·8월 6일 13:00~21:30 야간연장, 휴식 17:00~18:00입니다. 패밀리존 등은 같은 날 13:00~18:00만 운영했습니다."
+  },
+  {
+   "q": "워터파크존과 머드캐스크존도 유료였나요?",
+   "a": "머드캐스크존은 무료입니다. 워터파크존은 일반존·패밀리존 유료 핸드링 소지자에 한해 무료 입장하며 아동은 보호자 동반 조건입니다."
+  },
+  {
+   "q": "무료 셔틀이 있었나요?",
+   "a": "공식 본문은 카카오T 셔틀 상품을 안내하지만 무료 여부·요금·노선·배차는 확인하지 못했습니다. 무료 운행으로 표시하지 않았습니다."
+  },
+  {
+   "q": "주차장 빈자리와 면수를 볼 수 있나요?",
+   "a": "실시간 빈자리 정보는 제공하지 않습니다. 공식 주차 안내에는 주소·인근건물이 있고 면수·요금은 본문에서 확인하지 못했습니다."
+  },
+  {
+   "q": "8월 5일 머드온더비치와 퍼레이드 시각은 확정됐나요?",
+   "a": "일정표 상단은 안전점검일 연계행사 미운영이라고 안내하지만 8월 5일 공연 항목도 있습니다. 퍼레이드 시각에는 오전·오후 구분이 없습니다. 원문 충돌을 표시했고 임의로 확정하지 않았습니다."
+  },
+  {
+   "q": "공식 문의는 어디로 하나요?",
+   "a": "보령축제관광재단 축제사무국 041-930-0891. 공식 누리집 기준이며, 실제 전화 연결은 시험하지 않았습니다."
+  }
+ ],
+ "faqSourceNote": "공식 일정표·체험존입장권·셔틀·주차 안내 기준, 2026-10-13 확인. 출처 링크는 앱 data/sources.md에 있습니다.",
+ "home": {
+  "heroUrls": {
+   "main": "/festival-info",
+   "opening": "/program?day=2026-07-25",
+   "shuttle": "/shuttle"
+  },
+  "midUrls": [
+   "/program?day=2026-08-05",
+   "/foundation"
+  ],
+  "menu": [
+   {
+    "name": "날짜별 프로그램",
+    "summary": "17일 일정과 체험존 운영 예외",
+    "url": "/program",
+    "icon": "program"
+   },
+   {
+    "name": "행사장 지도",
+    "summary": "OSM 확인 장소만 표시",
+    "url": "/map",
+    "icon": "map"
+   },
+   {
+    "name": "셔틀 안내",
+    "summary": "카카오T 공식 안내 연결",
+    "url": "/shuttle",
+    "icon": "bus"
+   },
+   {
+    "name": "재단 행사 캘린더",
+    "summary": "머드축제 종료 · 야행 예정",
+    "url": "/foundation",
+    "icon": "calendar"
+   }
+  ],
+  "widgets": [
+   {
+    "name": "주차 안내",
+    "description": "11개 공식 안내 항목",
+    "url": "/parking",
+    "icon": "parking"
+   },
+   {
+    "name": "자주 묻는 질문",
+    "description": "입장료·안전점검·문의",
+    "url": "/faq",
+    "icon": "faq"
+   }
+  ],
+  "down": [
+   {
+    "name": "공식 공지",
+    "url": "/post/notice"
+   },
+   {
+    "name": "재단 행사",
+    "url": "/foundation"
+   },
+   {
+    "name": "분실물 문의",
+    "url": "/lost"
+   }
+  ]
+ },
+ "footer": {
+  "name": "보령축제관광재단 안내 데모",
+  "officialUrl": "https://www.mudfestival.or.kr/festival/view",
+  "instagram": "https://www.instagram.com/boryeongfestival_official/",
+  "youtube": "https://www.youtube.com/channel/UCcfNCgPtX1e_Un8LaSQsJXg",
+  "address": "공식 문의처: 충청남도 보령시 고잠2길 55",
+  "contact": "축제사무국 041-930-0891",
+  "copyright": "공식 누리집의 사실 자료를 정리한 비공식 시연용 MVP"
+ },
+ "infoButtons": [
+  {
+   "name": "체험존 입장 조건·요금 원문",
+   "value": "2026 종료 행사",
+   "url": "https://www.mudfestival.or.kr/festival/contents/view?contentsNo=6&level=2&menuNo=34"
+  },
+  {
+   "name": "셔틀 공식 안내",
+   "value": "카카오T 연결",
+   "url": "/shuttle"
+  },
+  {
+   "name": "재단 행사 캘린더",
+   "value": "확인된 2개 일정",
+   "url": "/foundation"
+  }
+ ],
+ "foundationEvents": {
+  "title": "재단 행사 캘린더",
+  "intro": "재단 공식 안내에서 일정이 확인된 머드축제와 국가유산야행을 모았습니다. 2027년 일정과 다른 행사 날짜는 추정하지 않았습니다.",
+  "items": [
+   {
+    "name": "제29회 보령머드축제",
+    "start": "2026-07-24",
+    "end": "2026-08-09",
+    "venue": "대천해수욕장 일원",
+    "desc": "머드 체험·야간 공연 / 2026년 종료",
+    "url": "/"
+   },
+   {
+    "name": "2026 보령국가유산야행",
+    "start": "2026-10-16",
+    "end": "2026-10-18",
+    "venue": "보령경찰서망루·원도심 일원",
+    "desc": "재단 공식 행사내용에서 2026 일정·장소 확인. 세부 안내는 공식 누리집으로 연결합니다.",
+    "url": "https://www.mudfestival.or.kr/festival/event/list?level=2&menuNo=95"
+   }
+  ],
+  "source": "출처: 재단 머드축제·야행 공식 안내(2026-10-13). 야행 상세 MVP는 이번 제작 범위에 포함되지 않습니다."
+ },
+ "lostFound": {
+  "empty": "실제 분실물 접수 자료가 없습니다. 이 시연은 문의 안내만 제공하며 물품을 등록하거나 보관하지 않습니다.",
+  "guide": "분실물 전용 연락처·접수 위치는 확인하지 못했습니다. 축제사무국에 안내를 문의하세요.",
+  "tel": "tel:041-930-0891",
+  "telLabel": "041-930-0891 (축제사무국)",
+  "note": "공식 재단 대표 축제 문의번호 기준. 실제 연결과 분실물 접수 가능 여부는 미확인입니다."
+ },
+ "endPopup": {
+  "title": "2026년 머드축제는 종료했습니다",
+  "body": "제29회 보령머드축제(7.24~8.9)의 지난 행사 정보를 보여주는 영업 시연용 데모입니다. 확인된 재단 행사 일정은 캘린더에서 확인하세요."
+ }
+}

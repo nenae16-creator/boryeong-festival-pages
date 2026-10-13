@@ -1,0 +1,411 @@
+// 보령머드축제 MVP. 기존 축제 엔진 재사용. data/festival.json 구동.
+import * as I from './icons.js';
+import * as A from './art.js';
+import * as P from './preferences.js';
+
+const root = document.getElementById('root');
+let DATA = null, cleanup = [];
+let saved = [];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = (s, el = root) => el.querySelector(s);
+const $$ = (s, el = root) => [...el.querySelectorAll(s)];
+// shortcut: 기존 클릭 마크업에 키보드 동작을 보완, 운영 제품 전환 때 실제 button으로 정리.
+function bindKeyboardControls() {
+  $$('[data-url], [data-back], [data-i], [data-c], [data-cat]').filter(el => !el.matches('button,a,input')).forEach(el => {
+    el.setAttribute('role', 'button'); el.tabIndex = 0;
+    if (el.hasAttribute('data-back')) el.setAttribute('aria-label', '뒤로 가기');
+  });
+}
+
+// ---------- navigation ----------
+// Hash routing (#/program?day=…) so the app works from file:// (double-click) as well as from a web server.
+function route() {
+  const h = location.hash.startsWith('#/') ? location.hash.slice(1) : '/';
+  const [path, qs = ''] = h.split('?');
+  return { path: path || '/', query: new URLSearchParams(qs) };
+}
+function navigate(path) { if ('#' + path === location.hash) render(); else location.hash = path; }
+function replaceRoute(path) { history.replaceState(null, '', '#' + path); }
+function onClickLink(url) {
+  if (!url) return alert('추후 업데이트 예정입니다.');
+  if (/^https?:\/\//.test(url)) return window.open(url, '_blank', 'noopener');
+  if (url.startsWith('tel:')) { document.location.href = url; return; }
+  navigate(url);
+}
+root.addEventListener('click', e => {
+  const save = e.target.closest('[data-save]');
+  if (save) {
+    const key = save.dataset.save;
+    const next = saved.includes(key) ? saved.filter(x => x !== key) : [...saved, key];
+    try { localStorage.setItem(P.savedKey, JSON.stringify({version:1, entries:next})); saved = next; }
+    catch { toast('저장 공간을 사용할 수 없어 관심 일정에 저장하지 못했습니다.'); return; }
+    const selected = saved.includes(key);
+    save.setAttribute('aria-pressed', String(selected)); save.textContent = selected ? '저장됨' : '관심 저장';
+    if (route().query.get('saved') === '1') render(); else updateSavedCount();
+    toast(selected ? '이 날짜의 관심 일정에 저장했습니다.' : '관심 일정에서 뺐습니다.'); return;
+  }
+  const t = e.target.closest('[data-url]'); if (t) { e.preventDefault(); onClickLink(t.dataset.url); return; }
+  if (e.target.closest('[data-back]')) { e.preventDefault(); history.length > 1 ? history.back() : navigate('/'); }
+});
+root.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"]')) { e.preventDefault(); e.target.click(); }
+});
+window.addEventListener('hashchange', render);
+function toast(message) {
+  let t = document.getElementById('app-status');
+  if (!t) { t = document.createElement('p'); t.id='app-status'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.textContent=message;
+  clearTimeout(toast.timer); toast.timer=setTimeout(()=>{t.textContent='';},3500);
+}
+function updateSavedCount() { $$('[data-saved-count]').forEach(x=>{x.textContent=saved.length;}); }
+function exportCalendar() {
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const calendar=P.savedCalendar(DATA.programs,saved,stamp);
+  if(!calendar.count){toast('시간이 명확한 관심 일정을 먼저 저장하세요. 확인 필요 일정은 내보내지 않습니다.');return;}
+  const url=URL.createObjectURL(new Blob([calendar.text],{type:'text/calendar;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='보령머드_2026_참고일정.ics';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast(`${calendar.count}개를 내보냈습니다. 시각이 불명확한 일정은 제외했습니다.`);
+}
+function defaultDay() { return DATA.days.some(d=>d.date===todayISO()) ? todayISO() : DATA.days[0].date; }
+function bottomNav() {
+  const path=route().path;
+  const items=[['/','홈',I.home],['/program','일정',I.calendar],['/plan','관람계획',I.pin],['/map','지도',I.locate],['/guide','이용안내',I.info]];
+  return `<nav class="merge-nav" aria-label="주요 메뉴">${items.map(([url,label,svg])=>`<button type="button" data-url="${url}" ${path===url?'aria-current="page"':''}><span aria-hidden="true">${svg||I.pin}</span>${label}</button>`).join('')}</nav>`;
+}
+function ensureNav() { if (!$('.merge-nav')) $('.app')?.insertAdjacentHTML('beforeend',bottomNav()); }
+async function sharePage(url, title) {
+  try {
+    if (navigator.share) { await navigator.share({title,url}); toast('공유 창을 열었습니다.'); }
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(url); toast('링크를 복사했습니다.'); }
+    else { prompt('아래 링크를 복사하세요.',url); }
+  } catch(e) { if(e.name!=='AbortError') { prompt('아래 링크를 복사하세요.',url); } }
+}
+
+function applyTheme(t) {
+  const r = document.documentElement.style;
+  r.setProperty('--main', t.main); r.setProperty('--bg', t.bg); r.setProperty('--sub', t.sub); r.setProperty('--accent', t.accent); r.setProperty('--font', t.font);
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content', t.bg);
+}
+
+// ---------- slider ----------
+function slider(el, count, { interval = 3500, dots = null } = {}) {
+  if (!el || count < 2) return;
+  const track = $('.track', el); let i = 0, timer, sx = null;
+  const go = n => { i = (n + count) % count; track.style.transform = `translateX(-${i * 100}%)`; if (dots) $$('span', dots).forEach((d, k) => d.classList.toggle('on', k === i)); };
+  const start = () => { clearInterval(timer); timer = setInterval(() => go(i + 1), interval); };
+  el.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+  el.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1)); start(); } sx = null; });
+  if (dots) $$('span', dots).forEach((d, k) => d.addEventListener('click', ev => { ev.stopPropagation(); go(k); start(); }));
+  go(0); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) start(); cleanup.push(() => clearInterval(timer));
+}
+
+// 외국어는 검수된 공식 안내로 연결한다.
+const langWidget = () => `<a class="lang" href="https://www.mudfestival.or.kr/en/festival/1_mud_festival/ticket_info.html" target="_blank" rel="noopener" aria-label="공식 영어 안내">ENG ↗</a>`;
+const bindLang = () => {};
+const translatePage = () => {};
+
+// ---------- shared ----------
+const subHeader = (title, { cls = 'b1', right = '', tabs = '', bg = false } = {}) => `
+  <div class="subhead-wrap"><div class="subhead ${bg ? 'bg' : cls}"><div class="l"><span data-back>${I.back}</span><h1>${esc(title)}</h1></div>${right}</div>${tabs}</div>
+  <div class="spacer"></div>${tabs ? '<div class="spacer" style="height:46px"></div>' : ''}`;
+const endedRibbon = (compact = false) => DATA.endedNotice && todayISO() > DATA.festival.endDate ? `<div class="ended" ${compact?`title="${esc(DATA.endedNotice)}"`:''}>${esc(compact?'2026.8.9 종료 행사 · 지난 공개 일정으로 만든 시연 화면':DATA.endedNotice)}</div>` : '';
+const demoBadge = () => `<div class="demo-badge">${esc(DATA.demoNotice)}</div>`;
+const fmtDay = d => { const x = DATA.days.find(v => v.date === d); const [, m, dd] = d.split('-'); return `${+m}.${+dd}(${x?.dow || ''})`; };
+const todayISO = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+const catOf = k => DATA.categories.find(c => c.key === k) || { name: k, color: '#666' };
+const sortKey = p => { const m = (p.time || '').match(/(\d{1,2}):(\d{2})/); return m ? m[1].padStart(2, '0') + ':' + m[2] : '99'; };
+
+// ---------- pages ----------
+function Home() {
+  const f = DATA.festival, h = DATA.home, ft = DATA.footer;
+  const shortcuts=[['program','프로그램','Program','/program'],['map','행사장 지도','Map','/map'],['parking','주차 안내','Parking','/parking'],['bus','셔틀 안내','Shuttle','/shuttle'],['info','축제 정보','Festival','/festival-info'],['saved','내 관심 일정','My Plan','/program?saved=1'],['family','관람계획','Guide','/plan'],['calendar','재단 행사','Events','/foundation'],['faq','자주 묻는 질문','FAQ','/faq'],['lost','분실물 문의','Lost & Found','/lost']];
+  root.innerHTML = `<div class="app"><div class="page home-page">
+    <div class="home-header"><div class="inner"><span class="logo" data-url="/">${A.logo(f)}</span>${langWidget()}</div></div>
+    <div class="spacer"></div>
+    ${endedRibbon(true)}
+    <div class="home-main">
+      <a class="hero-target" href="#/festival-info" aria-label="보령머드축제 정보 보기">${A.heroBanner('main', f)}</a>
+      <nav class="festival-shortcuts" aria-label="축제 바로가기">${shortcuts.map(([icon,label,en,url])=>`<button type="button" data-url="${url}">${A.icon(icon)}<strong>${label}${icon==='saved'?` <b data-saved-count>${saved.length}</b>`:''}</strong><small>${en}</small></button>`).join('')}</nav>
+      <section class="home-plans" aria-labelledby="home-plan-title"><div class="section-heading"><div><p>MAKE YOUR DAY</p><h2 id="home-plan-title">나에게 맞는 관람계획</h2></div><button type="button" data-url="/plan">전체 보기 ${I.chevronRight}</button></div>
+        <p class="section-desc">공식 일정에서 고른 가족 체험과 야간 공연</p>
+        <div class="plan-card-grid">${[['family','가족과 함께','패밀리존·워터파크','day'],['night','밤까지 즐기기','18시 이후 공개 공연','night']].map(([profile,title,subtitle,scene])=>`<button type="button" class="home-plan-card ${profile}" data-url="/plan?day=${defaultDay()}&profile=${profile}"><div class="plan-card-art">${A.scene(scene,'card-'+profile)}<span>${profile==='family'?'가족 체험':'야간 공연'}</span></div><div class="plan-card-copy"><strong>${title}</strong><small>${subtitle}</small><span aria-hidden="true">${I.chevronRight}</span></div></button>`).join('')}</div>
+      </section>
+      <section class="home-schedule" aria-label="날짜별 일정 안내"><div class="schedule-icon">${A.icon('calendar')}</div><div><small>2026 공개 일정 참고</small><h2>17일의 공연과 체험</h2><p>날짜·분류·공연명으로 찾아보세요.</p></div><button type="button" data-url="/program">자세히 보기 ${I.chevronRight}</button></section>
+      <section class="home-notices" aria-label="방문 전 확인"><div class="section-heading"><div><p>BEFORE YOU GO</p><h2>방문 전 확인하세요</h2></div><button type="button" data-url="/guide">이용안내 ${I.chevronRight}</button></div>
+        <button type="button" class="notice-link" data-url="/program?day=2026-08-05"><span class="notice-date">08.05</span><span><strong>체험존 안전점검 휴무</strong><small>해당 날짜의 운영 예외·원문 충돌 안내</small></span>${I.chevronRight}</button>
+        ${h.down.map(w=>`<button type="button" class="home-text-link" data-url="${esc(w.url)}"><span>${esc(w.name)}</span>${I.chevronRight}</button>`).join('')}
+      </section>
+    </div>
+    <div class="footer">
+      <div class="sns"><a href="${esc(ft.instagram)}" target="_blank" rel="noopener" aria-label="인스타그램">${I.instagram}</a><a href="${esc(ft.youtube)}" target="_blank" rel="noopener" aria-label="유튜브">${I.youtube}</a></div>
+      <h1>${esc(ft.name)}</h1>
+      <button data-url="${esc(ft.officialUrl)}">공식 홈페이지 이동</button>
+      <h2>${esc(ft.address)}\n${esc(ft.contact)}\n${esc(ft.copyright)}</h2>
+      ${demoBadge()}
+    </div>
+  </div></div>`;
+  bindLang(); endPopup();
+}
+
+function FestivalInfo() {
+  const f = DATA.festival;
+  const row = (k, v) => `<div class="kv"><span>${esc(k)}</span><b>${esc(v)}</b></div>`;
+  root.innerHTML = `<div class="app"><div class="page">${subHeader('축제 정보', { bg: true })}
+    <div class="finfo">${endedRibbon()}
+      <div class="info-card"><p class="eyebrow">${esc(f.subTheme)}</p><h1 class="serif">${esc(f.theme)}</h1><p class="intro">${esc(f.intro)}</p>
+        ${row('기간', f.dateLabel)}${row('장소', f.venueLabel + ' (' + f.venues.join(' · ') + ')')}${row('주행사장', f.mainVenue)}${row('운영시간', f.hours)}${row('관람료', f.fee)}${row('주최 / 주관', f.host + ' / ' + f.organizer)}</div>
+      <div class="lineup-card" data-url="/program"><div class="body" style="border-radius:12px"><h1>날짜별 프로그램</h1><div class="go"><h2>확인하러 가기</h2>${I.chevronRight}</div></div></div>
+      ${DATA.categories.map(c => `<button class="info-btn" data-url="/program?cat=${c.key}"><h1><i class="dot" style="background:${c.color}"></i>${esc(c.name)} 프로그램</h1><h2>${DATA.programs.filter(p => p.cat === c.key).length}개</h2></button>`).join('')}
+      ${(DATA.infoButtons || []).map(b => `<button class="info-btn" data-url="${esc(b.url)}"><h1>${esc(b.name)}</h1><h2>${esc(b.value)}</h2></button>`).join('')}
+    </div></div></div>`;
+}
+
+function programCard(p, day = defaultDay()) {
+  const c = catOf(p.cat);
+  const place = DATA.map.markers.find(m => (p.venue || '').includes(m.name));
+  const placeUrl = place ? `/map?q=${encodeURIComponent(place.name)}` : 'https://www.mudfestival.or.kr/festival/contents/view?contentsNo=37&level=2&menuNo=33';
+  return `<div class="pcard"><div class="ptime">${esc(p.time || '시각 미공개')}</div><div class="pbody">
+    <div class="program-actions"><span class="chip-s" style="background:${c.color}">${esc(c.name)}</span><button type="button" class="save-program" data-save="${P.entryKey(p, day)}" aria-label="${esc(p.title)} ${fmtDay(day)} 관심 일정 저장" aria-pressed="${saved.includes(P.entryKey(p, day))}">${saved.includes(P.entryKey(p, day))?'저장됨':'관심 저장'}</button></div><h3>${esc(p.title)}</h3>
+    <p class="venue" data-url="${esc(placeUrl)}">${I.pin}${esc(p.venue)}${place ? '' : ' · 공식 안내도 ↗'}</p>${p.desc ? `<p class="desc">${esc(p.desc)}</p>` : ''}
+    ${p.performers.length ? `<p class="perf">출연 · ${p.performers.map(esc).join(', ')}</p>` : ''}${p.note ? `<p class="note">※ ${esc(p.note)}</p>` : ''}${p.source ? `<a class="srcnote" href="${esc(p.source)}" target="_blank" rel="noopener">공식 원문 ↗ · ${esc(p.checkedAt)}</a>` : ''}</div></div>`;
+}
+function Program() {
+  const q = route().query;
+  const days = DATA.days;
+  let day = q.get('day'); if (day === 'today') day = todayISO();
+  let idx = Math.max(0, days.findIndex(d => d.date === day));
+  if (!day || days.findIndex(d => d.date === day) < 0) { const t = days.findIndex(d => d.date === todayISO()); idx = t >= 0 ? t : 0; }
+  let cat = q.get('cat') || 'all';
+  let term = q.get('q') || '', savedOnly = q.get('saved') === '1';
+  const updateRoute = () => {
+    const query = new URLSearchParams({day:days[idx].date});
+    if(cat!=='all') query.set('cat',cat);
+    if(term) query.set('q',term);
+    if(savedOnly) query.set('saved','1');
+    replaceRoute('/program?'+query);
+  };
+  const draw = () => {
+    const d = days[idx].date;
+    const list = P.filterPrograms(DATA.programs,d,cat,term,saved,savedOnly);
+    const timed = list.filter(p => !p.always).sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+    const always = list.filter(p => p.always);
+    root.innerHTML = `<div class="app"><div class="page">${subHeader('프로그램 안내', { cls: 'b4', tabs: `<div class="tabs" id="dtabs">${days.map((x, k) => `<h1 data-i="${k}" class="${k === idx ? 'on' : ''}"><small>${esc(x.label)}</small>${fmtDay(x.date)}</h1>`).join('')}</div>` })}
+      <div class="catbar">${[{ key: 'all', name: '전체', color: 'var(--main)' }, ...DATA.categories].map(c => `<span class="cchip ${c.key === cat ? 'on' : ''}" data-c="${c.key}" style="--c:${c.color}">${esc(c.name)}</span>`).join('')}</div>
+      <div class="program-tools"><label for="program-query">프로그램 검색</label><input type="text" role="searchbox" inputmode="search" id="program-query" value="${esc(term)}" placeholder="공연명·장소·운영 안내 검색"><button type="button" id="saved-filter" aria-pressed="${savedOnly}">내 관심 일정 <b data-saved-count>${saved.length}</b></button></div>
+      <div class="plist">${endedRibbon()}
+        ${savedOnly?'<p class="preference-note">관심 일정은 이 브라우저에만 보관합니다. 날짜를 바꾸면 그 날짜에 저장한 일정만 표시합니다.</p><button type="button" class="calendar-export" id="export-calendar">저장한 전체 날짜를 캘린더로 내보내기</button>':''}
+        <h2 class="sec">${fmtDay(d)} 시간별 프로그램 <span>${timed.length}</span></h2>
+        ${timed.length ? timed.map(p=>programCard(p,d)).join('') : '<p class="empty-msg small">검색 조건에 맞는 시간별 프로그램이 없습니다.</p>'}
+        ${always.length ? `<h2 class="sec">상설·기간 운영 <span>${always.length}</span></h2>${always.map(p=>programCard(p,d)).join('')}` : ''}
+        <p class="srcnote">${esc(DATA.programSourceNote || '')} 일정은 현장 사정에 따라 변경될 수 있습니다.</p>
+      </div></div></div>`;
+    $$('#dtabs h1').forEach(h => h.onclick = () => { idx = +h.dataset.i; updateRoute(); draw(); });
+    $$('.cchip').forEach(h => h.onclick = () => { cat = h.dataset.c; updateRoute(); draw(); });
+    $('#saved-filter').onclick=()=>{savedOnly=!savedOnly;updateRoute();draw();};
+    $('#export-calendar')?.addEventListener('click',exportCalendar);
+    $('#program-query').oninput=e=>{const cursor=e.target.selectionStart;term=e.target.value;updateRoute();draw();const input=$('#program-query');input.focus({preventScroll:true});if(input.type==='text') input.setSelectionRange(cursor,cursor);};
+    $('#dtabs .on')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+    bindKeyboardControls();
+    ensureNav();
+  };
+  draw();
+}
+
+function Plan() {
+  const q=route().query;
+  const day=DATA.days.some(d=>d.date===q.get('day'))?q.get('day'):defaultDay();
+  const profile=['family','night','all'].includes(q.get('profile'))?q.get('profile'):'family';
+  const list=P.planPrograms(DATA.programs,day,profile);
+  root.innerHTML=`<div class="app"><div class="page">${subHeader('관람계획')}<div class="finfo">${endedRibbon()}
+    <div class="plan-heading"><p class="eyebrow">2026 공개 일정 참고</p><h1>어떤 시간을 보내고 싶나요?</h1><p>공식 프로그램을 취향별로 모았습니다. 이동 경로·소요시간은 확정하지 않습니다.</p></div>
+    <label class="field-label" for="plan-day">관람 날짜</label><select id="plan-day">${DATA.days.map(d=>`<option value="${d.date}" ${day===d.date?'selected':''}>${fmtDay(d.date)}${d.label==='안전점검'?' · 체험존 휴무':''}</option>`).join('')}</select>
+    <div class="plan-profiles" role="group" aria-label="관람 유형">${[['family','가족 체험','패밀리존·워터파크'],['night','야간 공연','18시 이후 공개 일정'],['all','전체 일정','날짜별 모든 프로그램']].map(([k,a,b])=>`<button data-profile="${k}" aria-pressed="${k===profile}">${A.icon(k==='all'?'calendar':k)}<strong>${a}</strong><span>${b}</span></button>`).join('')}</div>
+    <div class="plan-summary"><h2>${fmtDay(day)} ${profile==='family'?'가족 체험':profile==='night'?'야간 공연':'전체 일정'}</h2><p>${list.length}개 공개 일정 · 관심 저장으로 나만의 계획에 담으세요.</p>${profile==='family'?'<p>어린이 연령·보호자 동반·유료 핸드링 조건은 공식 입장 안내를 확인하세요.</p>':''}</div>
+    ${day==='2026-08-05'?'<div class="info-card warn">체험존 안전점검 휴무입니다. 이날 공연 표기는 원문 내부에서 충돌해 관람계획에 넣지 않았습니다.</div>':''}
+    <div class="plan-timeline">${list.map(p=>programCard(p,day)).join('') || '<p class="empty-msg">확인된 프로그램이 없습니다. 날짜나 관람 유형을 바꾸세요.</p>'}</div>
+    <button type="button" class="plan-share" id="share-plan">이 관람계획 공유</button><p class="srcnote">공유 링크에는 날짜와 관람 유형만 담깁니다. 개인 관심 일정과 위치는 포함하지 않습니다.</p>
+    <button class="info-btn" data-url="/program?day=${day}&saved=1"><h1>이 날짜의 내 관심 일정 보기</h1>${I.chevronRight}</button>
+  </div></div></div>`;
+  const change=(newDay,newProfile)=>navigate(`/plan?day=${newDay}&profile=${newProfile}`);
+  $('#plan-day').onchange=e=>change(e.target.value,profile);
+  $$('[data-profile]').forEach(b=>b.onclick=()=>change(day,b.dataset.profile));
+  $('#share-plan').onclick=()=>sharePage(location.href.split('#')[0]+`#/plan?day=${day}&profile=${profile}`,'보령머드축제 관람계획');
+}
+
+function Guide() {
+  root.innerHTML=`<div class="app"><div class="page">${subHeader('이용안내')}<div class="finfo">${endedRibbon()}
+    <div class="plan-heading"><p class="eyebrow">공식 자료로 확인한 안내</p><h1>오가기와 현장 이용</h1><p>찾는 안내를 바로 열고, 조건이 달라질 수 있는 값은 공식 원문에서 확인하세요.</p></div>
+    ${[['셔틀·교통','카카오T 공식 연결, 운행 시간·요금은 확인 필요','/shuttle'],['주차 안내','공식 주소 11개 항목, 실시간 빈자리 없음','/parking'],['체험존 요금·운영','주중·주말·야간연장·휴무 구분','/festival-info'],['재단 행사 캘린더','머드축제·국가유산야행 일정','/foundation'],['분실물 문의','실제 접수 자료 없이 사무국 문의 연결','/lost'],['자주 묻는 질문','입장 조건·휴무·공식 문의','/faq'],['공식 공지','확인된 원문 안내로 이동','/post/notice']].map(([a,b,url])=>`<button class="guide-row" data-url="${url}"><span><strong>${a}</strong><small>${b}</small></span>${I.chevronRight}</button>`).join('')}
+    <div class="info-card"><h2 class="ctitle">안내 자료의 기준</h2><p class="cbody">2026년 종료 행사 자료로 만든 비공식 시연용 앱입니다. 혼잡도·주차 빈자리·셔틀 도착시간을 실시간 수치로 제공하지 않습니다. 장소와 일정에는 원문 출처를 연결했습니다.</p></div>
+  </div></div></div>`;
+}
+
+function shuttleStatus() {
+  const t = todayISO(), f = DATA.festival;
+  if (t > f.endDate) return `${f.startDate.slice(0, 4)}년 축제 운행 종료 (참고용 안내)`;
+  if (t < f.startDate) return `운행 예정 · ${DATA.shuttle.period}`;
+  return '운행 기간입니다 · 배차간격은 위 안내 기준';
+}
+function Shuttle() {
+  const s = DATA.shuttle;
+  root.innerHTML = `<div class="app"><div class="page">${subHeader('셔틀버스 안내')}
+    <div class="finfo" style="margin-top:12px">${endedRibbon()}
+      <div class="info-card"><div class="kv"><span>운행 기간</span><b>${esc(s.period)}</b></div><div class="kv"><span>운행 시간</span><b>${esc(s.hours)}</b></div><div class="kv"><span>요금</span><b>${esc(s.fare)}</b></div></div>
+      ${s.routes.map(r => `<div class="route"><div class="rhead" style="background:${r.color}"><b>${r.no}</b>${esc(r.name)}</div>
+        <div class="rbody"><p class="interval">${esc(r.interval)}</p><ol class="stops">${r.stops.map(st => `<li><i style="border-color:${r.color}"></i>${esc(st)}</li>`).join('')}</ol>
+        ${r.times ? `<table class="ttable"><tr><th>구간</th><th>첫차</th><th>막차</th></tr>${r.times.map(x => `<tr><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join('')}</table>` : ''}
+        <p class="eta">${I.clock}${esc(shuttleStatus())}</p></div></div>`).join('')}
+      ${(s.extra || []).map(x => `<div class="info-card"><h3 class="ctitle">${esc(x.title)}</h3><p class="cbody">${esc(x.body)}</p></div>`).join('')}
+      <p class="srcnote">${esc(s.note)}<br>출처: ${esc(s.source)}</p>
+      <button class="info-btn" data-url="${esc(s.sourceUrl)}"><h1>공식 셔틀 안내 보기 ↗</h1>${I.chevronRight}</button>
+    </div></div></div>`;
+}
+function Parking() {
+  const p = DATA.parking;
+  root.innerHTML = `<div class="app"><div class="page">${subHeader('주차 안내')}
+    <div class="finfo" style="margin-top:12px">
+      <div class="info-card warn">${esc(p.intro)}</div>
+      ${p.zones.map((z, k) => `<h2 class="sec">${esc(z.name)} <span>${esc(z.total)}</span></h2>
+        <div class="info-card"><p class="tag">${esc(z.access)}</p>
+        <table class="ttable"><tr><th>위치</th><th>면수</th><th>인근 건물</th></tr>${z.lots.map(l => `<tr><td>${esc(l[0])}</td><td>${esc(l[1])}</td><td>${esc(l[2])}</td></tr>`).join('')}</table></div>`).join('')}
+      <p class="srcnote">${esc(p.fee)}<br>출처: ${p.sources.map(esc).join('<br>')}</p>
+      <button class="info-btn" data-url="${esc(p.sourceUrl)}"><h1>공식 주차 안내 보기 ↗</h1>${I.chevronRight}</button>
+    </div></div></div>`;
+}
+
+function Posts(type) {
+  const isEvent = type === 'event', items = DATA.notices.filter(n => n.type === (isEvent ? 'EVENT' : 'NOTICE'));
+  root.innerHTML = `<div class="app"><div class="page">
+    ${subHeader(isEvent ? '이벤트' : '공지사항', { cls: 'b2', tabs: `<div class="tabs2"><h1 style="left:25%" class="${isEvent ? '' : 'on'}" data-url="/post/notice">공지사항</h1><h1 style="left:75%" class="${isEvent ? 'on' : ''}" data-url="/post/event">이벤트</h1><div class="bar" style="left:${isEvent ? 75 : 25}%"></div></div>` })}
+    <div class="list">${items.map(n => `<div class="post" data-url="${esc(n.url)}"><h3>${esc(n.title)}</h3><p>${esc(n.summary)}</p><span>${esc(n.date)} · 공식 누리집 ↗</span></div>`).join('') || '<div class="empty-msg">등록된 글이 없습니다.</div>'}</div></div></div>`;
+}
+function Faq() {
+  root.innerHTML = `<div class="app"><div class="page">${subHeader('자주 묻는 질문')}
+    <div class="finfo" style="margin-top:12px">${DATA.faq.map((f, k) => `<details class="faq" ${k ? '' : 'open'}><summary><b>Q</b>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}
+    <p class="srcnote">${esc(DATA.faqSourceNote || '')}</p></div></div></div>`;
+}
+
+function MapPage() {
+  const m = DATA.map, cats = m.categories, q0 = route().query;
+  let cat = q0.get('cat') || 'all', term = q0.get('q') || '';
+  root.innerHTML = `<div class="app"><div class="map-page">
+    <div class="map-head"><span data-back>${I.back}</span><h1>축제장 지도</h1>
+      <input class="map-search" id="mq" type="search" placeholder="장소 검색" value="${esc(term)}" aria-label="장소 검색"></div>
+    <div id="map"></div>
+    <div class="chips">${cats.map(c => `<span class="chip ${c.key === cat ? 'on' : ''}" data-cat="${c.key}">${c.color ? `<i class="dot" style="background:${c.color}"></i>` : ''}${esc(c.name)}</span>`).join('')}</div>
+    <button class="locate" id="locate" aria-label="현재 위치">${I.locate}</button>
+    <div class="map-note">${esc(m.note || '● 실선: 좌표 확인 · ◌ 점선: 위치 근사(예시)')}</div>
+    <div class="sheet" id="sheet" hidden></div>
+  </div></div>`;
+  // 확대 애니메이션의 지연 콜백이 화면 전환 후 제거된 지도를 참조하지 않게 한다.
+  const map = L.map('map', { zoomControl: false, zoomAnimation: false }).setView(m.center, m.zoom);
+  const tl = m.tiles || { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OpenStreetMap contributors' };
+  L.tileLayer(tl.url, { maxZoom: 19, subdomains: 'abcd', attribution: tl.attribution }).addTo(map);
+  // 행사장 외곽선(OSM에서 확인한 실제 경계만): 은은한 채움 + 굵은 테두리로 축제 공간을 한눈에
+  (m.areas || []).forEach(a => L.polygon(a.coords, { color: DATA.theme.main, weight: 3, fillColor: DATA.theme.sub, fillOpacity: .18, interactive: false }).addTo(map));
+  const layer = L.layerGroup().addTo(map);
+  const color = k => cats.find(c => c.key === k)?.color || '#333';
+  const GLYPH = { venue: '★', shuttle: '버스', parking: 'P', info: 'i', toilet: 'WC' };
+  const short = s => s.split(/ [(—]/)[0];
+  // 장소 상세는 하단 시트로. ?spot=번호 로 바로 열 수 있다(QR·공지 링크용).
+  const sheet = $('#sheet');
+  const openSpot = (x, k) => {
+    sheet.hidden = false;
+    sheet.innerHTML = `<div class="grip"></div><span class="chip-s" style="background:${color(x.cat)}">${esc(cats.find(c => c.key === x.cat)?.name || '')}</span>
+      <h3>${esc(x.name)}</h3><p>${esc(x.desc)}</p>
+      <p class="src">${x.verified ? (x.source.includes('openstreetmap') ? '좌표: OpenStreetMap' : '좌표: 공식 누리집 지도 링크') : '⚠ 위치 근사(예시)'} · <a href="${esc(x.source)}" target="_blank" rel="noopener">출처</a></p>
+      <div class="sheet-btns"><a href="https://map.kakao.com/link/to/${encodeURIComponent(x.name)},${x.lat},${x.lng}" target="_blank" rel="noopener">길찾기 (카카오맵)</a><button type="button" id="shareSpot">이 장소 링크 복사</button></div>`;
+    $('#shareSpot').onclick = () => sharePage(location.href.split('#')[0] + '#/map?spot=' + k,x.name);
+    replaceRoute('/map?spot=' + k);
+    map.setView([x.lat, x.lng], Math.max(map.getZoom(), 17));
+  };
+  map.on('click', () => { sheet.hidden = true; });
+  // 멀리서 볼 때는 주요 표식(major) 이름표만, 확대(17 이상)하면 전부 표시 — 이름표 겹침 방지
+  const zoomCls = () => map.getContainer().classList.toggle('lowzoom', map.getZoom() < 17);
+  map.on('zoomend', zoomCls); zoomCls();
+  const match = x => !term || (x.name + ' ' + x.desc).includes(term);
+  const draw = (fit = true) => {
+    layer.clearLayers(); const pts = [];
+    m.markers.forEach((x, k) => {
+      if (!(cat === 'all' || x.cat === cat) || !match(x)) return;
+      const html = `<div class="badge ${x.verified ? '' : 'approx'} ${x.cat} ${x.major ? 'major' : ''}" style="--c:${color(x.cat)}"><b>${GLYPH[x.cat] || '•'}</b><em>${esc(short(x.name))}</em></div>`;
+      L.marker([x.lat, x.lng], { zIndexOffset: x.cat === 'venue' ? 1000 : 0, icon: L.divIcon({ className: '', html, iconSize: [34, 34], iconAnchor: [17, 17] }) })
+        .on('click', e => { L.DomEvent.stopPropagation(e); openSpot(x, k); }).addTo(layer);
+      pts.push([x.lat, x.lng]);
+    });
+    if (!pts.length) { sheet.hidden = false; sheet.innerHTML = '<p>확인된 지도 지점이 없습니다. 내부 부스·광장 좌표는 아직 표시하지 않습니다.</p>'; }
+    if (!fit) return;
+    if (cat === 'all' && !term) map.setView(m.center, m.zoom); else if (pts.length > 1) map.fitBounds(pts, { padding: [60, 40], maxZoom: 17 }); else if (pts.length) map.setView(pts[0], 17);
+  };
+  draw();
+  const spot = +q0.get('spot'); if (q0.has('spot') && m.markers[spot]) openSpot(m.markers[spot], spot);
+  $('#mq').oninput = e => { term = e.target.value.trim(); sheet.hidden = true; draw(); };
+  $$('.chip').forEach(c => c.onclick = () => { cat = c.dataset.cat; $$('.chip').forEach(o => o.classList.toggle('on', o === c)); draw(); });
+  $('#locate').onclick = () => navigator.geolocation?.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 17); L.circleMarker([p.coords.latitude, p.coords.longitude], { radius: 8, color: '#2563eb' }).addTo(map); }, () => alert('위치 정보를 가져올 수 없습니다.'));
+  cleanup.push(() => map.remove());
+}
+
+// 재단이 주관하는 여러 행사를 한 화면에서 (통합 플랫폼 제안의 시연)
+function Foundation() {
+  const ev = DATA.foundationEvents, t = todayISO();
+  const st = e => t > e.end ? ['done', '종료'] : t < e.start ? ['next', '예정'] : ['now', '진행 중'];
+  const md = d => { const [, m, dd] = d.split('-'); return `${+m}.${+dd}`; };
+  root.innerHTML = `<div class="app"><div class="page">${subHeader(ev.title, { bg: true })}
+    <div class="finfo" style="margin-top:12px">
+      <div class="info-card"><p class="intro">${esc(ev.intro)}</p></div>
+      ${ev.items.map(e => { const [c, l] = st(e); return `<div class="info-card ev">
+        <div class="when">${esc(e.start.slice(0, 4))}<b>${md(e.start)}</b>${e.end !== e.start ? '~' + md(e.end) : ''}</div>
+        <div><span class="st ${c}">${l}</span><h3>${esc(e.name)}</h3><p>${I.pin}${esc(e.venue)}</p><p>${esc(e.desc)}</p>
+        <div class="go" data-url="${esc(e.url)}">${e.url.startsWith('/') ? '이 앱에서 보기 ›' : '공식 안내 ↗'}</div></div></div>`; }).join('')}
+      <p class="srcnote">${esc(ev.source)}</p>
+    </div></div></div>`;
+}
+
+// 분실물 찾기: 운영본부가 사진과 함께 등록하는 게시판(본 사업 구축 범위). 데모에는 실제 접수 자료가 없어 빈 목록과 접수 안내만 보여준다.
+function LostFound() {
+  const lf = DATA.lostFound;
+  root.innerHTML = `<div class="app"><div class="page">${subHeader('분실물 찾기')}
+    <div class="finfo" style="margin-top:12px">
+      <div class="info-card"><input class="lf-search" type="search" placeholder="물건 이름으로 검색 (예: 우산)" aria-label="분실물 검색" disabled></div>
+      <div class="info-card empty-lf"><h3>등록된 분실물이 없습니다</h3><p>${esc(lf.empty)}</p></div>
+      <div class="info-card"><h3 class="ctitle">분실물 접수·문의</h3><p class="cbody">${esc(lf.guide)}</p>
+        <button class="info-btn" data-url="${esc(lf.tel)}" style="margin-top:10px"><h1>축제사무국 문의</h1><h2>${esc(lf.telLabel)}</h2></button></div>
+      <p class="srcnote">${esc(lf.note)}</p>
+    </div></div></div>`;
+}
+
+// 축제가 끝난 뒤 첫 방문 때 한 번 띄우는 종료 안내 (같은 탭에서는 다시 안 뜸)
+function endPopup() {
+  const q = route().query;
+  if (!DATA.endedNotice || todayISO() <= DATA.festival.endDate || q.has('nopop')) return;
+  try { if (sessionStorage.getItem('boryeong:endpop')) return; } catch { }
+  const el = document.createElement('div'); el.className = 'endpop';
+  el.innerHTML = `<div class="box"><p class="eyebrow">${esc(DATA.festival.name)}</p><h2>${esc(DATA.endPopup.title)}</h2><p>${esc(DATA.endPopup.body)}</p>
+    <button type="button" data-url="/foundation">재단 행사 캘린더 보기</button><button type="button" class="close">닫기</button></div>`;
+  const close = () => { el.remove(); try { sessionStorage.setItem('boryeong:endpop', '1'); } catch { } };
+  el.querySelector('.close').onclick = close; el.querySelector('[data-url]').onclick = () => { close(); navigate('/foundation'); };
+  document.body.appendChild(el); cleanup.push(() => el.remove());
+}
+
+function NotFound() {
+  root.innerHTML = `<div class="nf"><div class="box"><p class="code">404</p><h1>페이지를 찾을 수 없어요</h1>
+    <p class="d">요청하신 페이지가 없거나 주소가\n변경되었을 수 있어요.</p>
+    <div class="btns"><button class="p" data-url="/">홈으로 돌아가기</button><button class="s" data-back>이전 페이지로</button></div></div></div>`;
+}
+
+const routes = [
+  [/^\/$/, Home], [/^\/festival-info\/?$/, FestivalInfo], [/^\/program\/?$/, Program], [/^\/plan\/?$/, Plan], [/^\/guide\/?$/, Guide], [/^\/map\/?$/, MapPage],
+  [/^\/shuttle\/?$/, Shuttle], [/^\/parking\/?$/, Parking], [/^\/post\/(notice|event)\/?$/, m => Posts(m[1])], [/^\/faq\/?$/, Faq], [/^\/foundation\/?$/, Foundation], [/^\/lost\/?$/, LostFound],
+];
+function render() {
+  cleanup.forEach(fn => fn()); cleanup = [];
+  const p = route().path, hit = routes.find(([re]) => re.test(p));
+  hit ? hit[1](p.match(hit[0])) : NotFound();
+  ensureNav();
+  bindKeyboardControls();
+  window.scrollTo(0, 0); translatePage();
+}
+function boot(d) { DATA = d; try { saved=P.readSaved(localStorage.getItem(P.savedKey),d.programs); } catch { saved=[]; } applyTheme(d.theme); document.title = d.festival.name + ' · ' + d.festival.region; render(); }
+// data/festival.js sets window.FESTIVAL_DATA (works on file://); fall back to fetching the JSON when served over http.
+if (window.FESTIVAL_DATA) boot(window.FESTIVAL_DATA);
+else fetch('data/festival.json').then(r => r.json()).then(boot).catch(() => { root.innerHTML = '<p style="padding:24px">데이터를 불러오지 못했습니다 (data/festival.js 확인).</p>'; });
