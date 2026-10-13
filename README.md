@@ -8,4 +8,5 @@
 
 - 공식 자료 확인일 2026-10-13 (보령축제관광재단 누리집). 시각·장소가 미확인인 항목은 추정하지 않고 "확인 필요"로 표시합니다.
 - 사진: 위키미디어 공용 CC BY 2.0 — 저작자·원본 링크는 앱의 「자료 출처·사진 저작권」 화면에 있습니다.
-- 지도: © OpenStreetMap 기여자(ODbL), 타일 OpenFreeMap. 글꼴 Noto Sans KR·Nanum Brush Script(SIL OFL).
+- 지도: 카카오맵 Web SDK. 장소 좌표·해변 경계의 원천은 © OpenStreetMap 기여자(ODbL). SDK를 불러오지 못하면 OpenFreeMap·OSM 지도로 대체합니다. 글꼴 Noto Sans KR·Nanum Brush Script(SIL OFL).
+- 카카오 JavaScript 키는 사용자가 선택한 기존 무료 앱의 키로, 등록된 사이트 도메인에서 사용합니다. 그 앱의 다른 서비스와 무료 쿼터를 공유합니다. REST API 키·Admin 키는 포함하지 않습니다.
